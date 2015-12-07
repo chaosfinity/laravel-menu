@@ -28,14 +28,14 @@ class Builder {
 	 *
 	 * @var array
 	 */
-	protected $groupStack = array();
+	protected $groupStack = [];
 	
 	/**
 	* The reserved attributes.
 	*
 	* @var array
 	*/
-	protected $reserved = array('route', 'action', 'url', 'prefix', 'parent', 'secure', 'raw');
+	protected $reserved = ['route', 'action', 'url', 'prefix', 'parent', 'secure', 'raw'];
 
 	/**
 	* The last inserted item's id
@@ -95,7 +95,7 @@ class Builder {
 	 *
 	 * @return Lavary\Menu\Item
 	 */
-	public function raw($title, array $options = array())
+	public function raw($title, array $options = [])
 	{
 		$options['raw'] = true;
 		
@@ -177,9 +177,9 @@ class Builder {
 	 * @param  array $attributes
 	 * @return void
 	 */
-	public function divide(array $attributes = array()){
+	public function divide(array $attributes = []){
 		
-		$attributes['class'] = self::formatGroupClass(array('class' => 'divider'), $attributes);
+		$attributes['class'] = self::formatGroupClass(['class' => 'divider'], $attributes);
 		
 		$this->items->last()->divider = $attributes;
 
@@ -210,7 +210,7 @@ class Builder {
 	 * @param  array  $attributes
 	 * @return void
 	 */
-	protected function updateGroupStack(array $attributes = array())
+	protected function updateGroupStack(array $attributes = [])
 	{
 
 		if (count($this->groupStack) > 0)
@@ -246,7 +246,7 @@ class Builder {
 		
 		$new['class']  = self::formatGroupClass($new, $old);
 		
-		return array_merge(array_except($old, array('prefix', 'class')), $new);
+		return array_merge(array_except($old, ['prefix', 'class']), $new);
 	}
 
 	/**
@@ -317,7 +317,7 @@ class Builder {
 	 * @param  array   $options
 	 * @return string
 	 */
-	public function extractAttributes($options = array())
+	public function extractAttributes($options = [])
 	{
 		if(is_array($options)) {
 			
@@ -328,7 +328,7 @@ class Builder {
 			return array_except($options, $this->reserved);
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -392,7 +392,7 @@ class Builder {
 			return $url;
 
 		}
-		return \URL::to($prefix . '/' . $url, array(), $secure);
+		return \URL::to($prefix . '/' . $url, [], $secure);
 	}
 
 	/**
@@ -458,7 +458,7 @@ class Builder {
 	public function filter($callback)
 	{
 		if( is_callable($callback) ) {
-	
+
 			$this->items = $this->items->filter($callback);
 		}
 
@@ -477,17 +477,17 @@ class Builder {
 
 			$rslt = call_user_func($sort_by, $this->items->toArray());
 
-			if(!is_array($rslt)) {
-				$rslt = array($rslt);
-			}
+            if ( ! is_array($rslt)) {
+                $rslt = [$rslt];
+            }
 
-			$this->items = new Collection($rslt);
+            $this->items = new Collection($rslt);
 
-		}
-		
-		// running the sort proccess on the sortable items
+        }
+
+        // running the sort proccess on the sortable items
 		$this->items->sort(function ($f, $s) use ($sort_by, $sort_type) {
-			
+
 			$f = $f->$sort_by;
 			$s = $s->$sort_by;
 			
@@ -519,7 +519,7 @@ class Builder {
 	{
 		$items = '';
 		
-		$item_tag = in_array($type, array('ul', 'ol')) ? 'li' : $type;
+		$item_tag = in_array($type, ['ul', 'ol']) ? 'li' : $type;
 		
 		foreach ($this->whereParent($parent) as $item)
 		{
@@ -552,7 +552,7 @@ class Builder {
 	 *
 	 * @return string
 	 */
-	public function asUl($attributes = array())
+	public function asUl($attributes = [])
 	{
 		return "<ul{$this->attributes($attributes)}>{$this->render('ul')}</ul>";
 	}
@@ -562,7 +562,7 @@ class Builder {
 	 *
 	 * @return string
 	 */
-	public function asOl($attributes = array())
+	public function asOl($attributes = [])
 	{
 		return "<ol{$this->attributes($attributes)}>{$this->render('ol')}</ol>";
 	}
@@ -572,7 +572,7 @@ class Builder {
 	 *
 	 * @return string
 	 */
-	public function asDiv($attributes = array())
+	public function asDiv($attributes = [])
 	{
 		return "<div{$this->attributes($attributes)}>{$this->render('div')}</div>";
 	}
@@ -584,7 +584,7 @@ class Builder {
 	 *
 	 * @return string
 	 */
-	public function attributes($attributes = array()) {
+	public function attributes($attributes = []) {
 
 		return \HTML::attributes($attributes);
 	}
@@ -609,7 +609,7 @@ class Builder {
 	 *
 	 * @return string
 	 */
-	public static function mergeStatic($new = null, array $old = array()) {
+	public static function mergeStatic($new = null, array $old = []) {
 		
 		// Parses the string into an associative array
 		parse_str(preg_replace('/\s*([\w-]+)\s*=\s*"([^"]+)"/', '$1=$2&',  $new), $attrs);
@@ -618,7 +618,7 @@ class Builder {
 		$attrs['class']  = self::formatGroupClass($attrs, $old);
 
 		// Merging new and old array and parse it as a string
-		return \HTML::attributes(array_merge(array_except($old, array('class')), $attrs));
+		return \HTML::attributes(array_merge(array_except($old, ['class']), $attrs));
 	}
 
 	/**
